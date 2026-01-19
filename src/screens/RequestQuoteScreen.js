@@ -1,40 +1,85 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { db } from '../services/firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
 
-export default function RequestQuoteScreen() {
+export default function RequestQuoteScreen({ navigation }) {
+  const [address, setAddress] = useState('');
+  const [serviceType, setServiceType] = useState('Residencial');
+  const [details, setDetails] = useState('');
+
+  const sendRequest = async () => {
+    if (!address || !details) {
+      Alert.alert("Campos incompletos", "Por favor llena la dirección y detalles.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "solicitudes"), {
+        address,
+        serviceType,
+        details,
+        status: "Pendiente",
+        date: new Date().toISOString()
+      });
+      Alert.alert("¡Enviado!", "Dayana revisará tu solicitud pronto.");
+      navigation.navigate('Welcome');
+    } catch (e) {
+      Alert.alert("Error", "No se pudo enviar la solicitud.");
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Nueva Solicitud</Text>
       
-      <Text style={styles.label}>¿Qué tipo de limpieza necesitas?</Text>
-      <View style={styles.row}>
-        <TouchableOpacity style={styles.chipSelected}><Text>Deep Clean</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.chip}><Text>Mantenimiento</Text></TouchableOpacity>
+      <Text style={styles.label}>Dirección del Servicio</Text>
+      <TextInput 
+        style={styles.input} 
+        placeholder="Ej: 123 Luxury Ave, Miami" 
+        onChangeText={setAddress}
+      />
+
+      <Text style={styles.label}>Tipo de Limpieza</Text>
+      <View style={styles.pickerContainer}>
+        {['Residencial', 'Comercial', 'Post-Construcción'].map((type) => (
+          <TouchableOpacity 
+            key={type} 
+            style={[styles.chip, serviceType === type && styles.chipActive]}
+            onPress={() => setServiceType(type)}
+          >
+            <Text style={serviceType === type ? styles.chipTextActive : styles.chipText}>{type}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
-      <Text style={styles.label}>Detalles de la propiedad</Text>
-      <TextInput style={styles.input} placeholder="Ej. 3 recámaras, 2 baños" />
-      
-      <TouchableOpacity style={styles.photoButton}>
-        <Text style={styles.photoText}>📷 Subir Fotos de las áreas</Text>
-      </TouchableOpacity>
+      <Text style={styles.label}>Detalles Adicionales</Text>
+      <TextInput 
+        style={[styles.input, styles.textArea]} 
+        placeholder="Ej: 3 habitaciones, limpieza profunda de cocina..." 
+        multiline
+        numberOfLines={4}
+        onChangeText={setDetails}
+      />
 
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitText}>Enviar al Admin</Text>
+      <TouchableOpacity style={styles.mainButton} onPress={sendRequest}>
+        <Text style={styles.mainButtonText}>ENVIAR SOLICITUD PREMIUM</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  header: { fontSize: 22, fontWeight: 'bold', color: '#002D62', marginBottom: 20 },
-  label: { fontSize: 16, fontWeight: '600', marginTop: 15 },
-  input: { borderBottomWidth: 1, borderColor: '#ccc', paddingVertical: 10, marginBottom: 20 },
-  chip: { padding: 10, borderRadius: 20, borderWidth: 1, borderColor: '#ccc', marginRight: 10 },
-  chipSelected: { padding: 10, borderRadius: 20, backgroundColor: '#D4AF37', marginRight: 10 },
-  row: { flexDirection: 'row', marginTop: 10 },
-  photoButton: { padding: 40, borderStyle: 'dashed', borderWidth: 2, borderColor: '#D4AF37', alignItems: 'center', marginTop: 20 },
-  submitButton: { backgroundColor: '#002D62', padding: 15, borderRadius: 10, marginTop: 30, alignItems: 'center' },
-  submitText: { color: '#fff', fontWeight: 'bold' }
+  container: { flex: 1, backgroundColor: '#F8F9FA', padding: 20 },
+  header: { fontSize: 24, fontWeight: 'bold', color: '#002D62', marginBottom: 20, marginTop: 20 },
+  label: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 10 },
+  input: { backgroundColor: '#fff', padding: 15, borderRadius: 10, marginBottom: 20, borderWidth: 1, borderColor: '#DDD' },
+  textArea: { height: 100, textAlignVertical: 'top' },
+  pickerContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 25 },
+  chip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, backgroundColor: '#E9ECEF' },
+  chipActive: { backgroundColor: '#002D62' },
+  chipText: { color: '#666' },
+  chipTextActive: { color: '#fff', fontWeight: 'bold' },
+  mainButton: { backgroundColor: '#002D62', padding: 18, borderRadius: 12, alignItems: 'center', marginTop: 10 },
+  mainButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
 });
