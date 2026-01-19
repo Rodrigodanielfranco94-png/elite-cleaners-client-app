@@ -6,17 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Setup Expo
-        uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          token: ${{ secrets.EXPO_TOKEN }} # Aquí cambiamos 'eas-token' por 'token'
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
       - name: Install dependencies
         run: npm install
       - name: Build APK
-        run: npx eas-cli build -p android --profile preview --non-interactive
+        run: eas build -p android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
