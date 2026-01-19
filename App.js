@@ -1,46 +1,35 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-// Importamos tus pantallas profesionales
-import RegisterScreen from './src/screens/RegisterScreen';
-import WelcomeScreen from './src/screens/WelcomeScreen';
-import RequestQuoteScreen from './src/screens/RequestQuoteScreen';
-import ChatScreen from './src/screens/ChatScreen';
-
-const Stack = createStackNavigator();
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      {/* Definimos el orden de las pantallas */}
-      <Stack.Navigator initialRouteName="Register">
-        
-        <Stack.Screen 
-          name="Register" 
-          component={RegisterScreen} 
-          options={{ title: 'Crear Cuenta Élite' }} 
-        />
-        
-        <Stack.Screen 
-          name="Welcome" 
-          component={WelcomeScreen} 
-          options={{ title: 'Bienvenido' }} 
-        />
-        
-        <Stack.Screen 
-          name="RequestQuote" 
-          component={RequestQuoteScreen} 
-          options={{ title: 'Solicitar Cotización' }} 
-        />
-        
-        <Stack.Screen 
-          name="Chat" 
-          component={ChatScreen} 
-          options={{ title: 'Chat de Negociación' }} 
-        />
-        
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+{
+  "expo": {
+    "name": "Élite Cleaners Pro",
+    "slug": "elite-cleaners-client",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#002D62"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.elitecleaners.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#002D62"
+      },
+      "package": "com.elitecleaners.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "tu-id-de-proyecto-aqui"
+      }
+    }
+  }
 }
+
