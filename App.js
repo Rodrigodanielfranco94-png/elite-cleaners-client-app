@@ -11,9 +11,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#002D62"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.elitecleaners.app"
@@ -27,9 +24,8 @@
     },
     "extra": {
       "eas": {
-        "projectId": "tu-id-de-proyecto-aqui"
+        "projectId": "5c3b14a5-ef27-4afe-9cd6-63fc6346757c"
       }
     }
   }
 }
-
