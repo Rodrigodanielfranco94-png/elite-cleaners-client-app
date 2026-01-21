@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Cleaners Company - Reservas</title>
+    <title>Elite Cleaners Company - Booking</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #ffffff; margin: 0; padding: 0; }
-        .header { background-color: #000000; color: #d4af37; padding: 30px; text-align: center; border-bottom: 2px solid #d4af37; }
-        .logo { width: 120px; margin-bottom: 10px; }
-        .container { padding: 25px; max-width: 500px; margin: 30px auto; background: #1e1e1e; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
+        :root {
+            --gold: #d4af37;
+            --black: #1a1a1a;
+            --white: #ffffff;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; color: var(--black); }
+        .header { background-color: var(--black); color: var(--gold); padding: 30px 20px; text-align: center; border-bottom: 4px solid var(--gold); }
+        .logo { width: 120px; margin-bottom: 10px; border-radius: 50%; }
+        .container { padding: 30px 20px; max-width: 500px; margin: 20px auto; background: var(--white); border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
-        h3 { color: #d4af37; text-align: center; margin-top: 0; }
+        h3 { color: var(--black); text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 6px; box-sizing: border-box; background-color: #2a2a2a; color: white; font-size: 16px; }
-        input:focus, select:focus { border-color: #d4af37; outline: none; }
-        .btn-reserve { background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%); color: black; border: none; padding: 18px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 6px; transition: transform 0.2s; margin-top: 10px; }
-        .btn-reserve:active { transform: scale(0.98); }
-        .footer { text-align: center; font-size: 12px; color: #666; margin-top: 40px; padding-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }
+        .btn-reserve { background-color: var(--gold); color: white; border: none; padding: 18px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; text-transform: uppercase; margin-top: 10px; }
+        .btn-reserve:hover { background-color: #b8962e; transform: translateY(-2px); }
+        footer { text-align: center; padding: 20px; font-size: 12px; color: #888; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <img src="assets/icon.png" alt="Elite Cleaners Logo" class="logo">
-        <h1>ÉLITE CLEANERS COMPANY</h1>
+        <h1>ELITE CLEANERS COMPANY</h1>
     </div>
 
     <div class="container">
-        <h3>RESERVA PREMIUM</h3>
+        <h3>RESERVA DE SERVICIO</h3>
         
         <div class="form-group">
             <label>Nombre Completo</label>
@@ -38,66 +43,70 @@
         <div class="form-group">
             <label>Tipo de Servicio</label>
             <select id="servicio">
-                <option value="Residencial">Limpieza Residencial</option>
-                <option value="Oficina">Limpieza de Oficina</option>
-                <option value="Profunda">Limpieza Profunda (Move-in/out)</option>
-                <option value="Post-Construccion">Post-Construcción</option>
+                <option value="Residencial Standard">Residencial Standard</option>
+                <option value="Oficina / Comercial">Oficina / Comercial</option>
+                <option value="Deep Cleaning (Profunda)">Deep Cleaning (Profunda)</option>
+                <option value="Move-in / Move-out">Move-in / Move-out</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Fecha del Servicio</label>
+            <label>Fecha Deseada</label>
             <input type="date" id="fecha">
         </div>
 
         <div class="form-group">
             <label>Dirección del Servicio</label>
-            <input type="text" id="direccion" placeholder="Calle, Ciudad, Zip Code">
+            <textarea id="direccion" rows="2" placeholder="Calle, Ciudad, Zip Code"></textarea>
         </div>
 
         <div class="form-group">
-            <label>Tu Teléfono de Contacto</label>
-            <input type="tel" id="telefono" placeholder="+1 (925) 336-2884">
+            <label>Teléfono de Contacto</label>
+            <input type="tel" id="telefono" placeholder="Ej: +1 786 000 0000">
         </div>
 
-        <button class="btn-reserve" onclick="enviarReserva()">CONFIRMAR EN WHATSAPP</button>
+        <button class="btn-reserve" onclick="enviarReserva()">Confirmar por WhatsApp</button>
     </div>
 
-    <div class="footer">
-        © 2026 Élite Cleaners Company - Excellence in Service
-    </div>
+    <footer>
+        &copy; 2026 Elite Cleaners Company | High-End Cleaning Services
+    </footer>
 
     <script>
         function enviarReserva() {
-            // Captura de datos
+            // 1. Obtener los valores del formulario
             const nombre = document.getElementById('nombre').value;
             const servicio = document.getElementById('servicio').value;
             const fecha = document.getElementById('fecha').value;
             const direccion = document.getElementById('direccion').value;
             const tel = document.getElementById('telefono').value;
-            
-            // VALIDACIÓN SIMPLE
+
+            // 2. Validación simple
             if(!nombre || !fecha || !tel) {
-                alert("Por favor completa los campos principales (Nombre, Fecha y Teléfono)");
+                alert("Por favor completa nombre, fecha y teléfono.");
                 return;
             }
+            
+            // 3. CONFIGURA AQUÍ TU NÚMERO (Sin el +)
+            // Ejemplo: "17865551234"
+            const numeroEmpresa = "TU_NUMERO_AQUI"; 
 
-            // CONFIGURACIÓN DEL NÚMERO (Pon el tuyo aquí)
-            const numeroEmpresa = "1234567890"; 
+            // 4. Formatear el mensaje para WhatsApp
+            const texto = `*NUEVA SOLICITUD DE RESERVA*%0A` +
+                          `----------------------------%0A` +
+                          `*Cliente:* ${nombre}%0A` +
+                          `*Servicio:* ${servicio}%0A` +
+                          `*Fecha:* ${fecha}%0A` +
+                          `*Dirección:* ${direccion}%0A` +
+                          `*Teléfono:* ${tel}%0A` +
+                          `----------------------------%0A` +
+                          `_Enviado desde la App de Clientes_`;
 
-            // Construcción del mensaje con formato WhatsApp
-            const mensaje = 
-                "*NUEVA SOLICITUD DE RESERVA*%0A" +
-                "----------------------------------%0A" +
-                "*Cliente:* " + nombre + "%0A" +
-                "*Servicio:* " + servicio + "%0A" +
-                "*Fecha:* " + fecha + "%0A" +
-                "*Dirección:* " + direccion + "%0A" +
-                "*Teléfono:* " + tel + "%0A" +
-                "----------------------------------%0A" +
-                "_Enviado desde la App de Clientes_";
-
-            // Abrir WhatsApp
-            window.open("https://wa.me/" + numeroEmpresa + "?text=" + mensaje);
+            // 5. Abrir WhatsApp
+            const url = `https://wa.me/${numeroEmpresa}?text=${texto}`;
+            window.open(url, '_blank');
         }
-    </script
+    </script>
+
+</body>
+</html>
