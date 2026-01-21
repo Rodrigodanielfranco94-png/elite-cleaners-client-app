@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Cleaners - Reserva Pro</title>
+    <title>Elite Cleaners - Booking Pro</title>
     <style>
         :root {
             --gold: #d4af37;
@@ -19,7 +19,7 @@
             margin: 0; padding: 0; color: var(--white); 
         }
         .header { text-align: center; padding: 40px 20px 20px 20px; }
-        h1 { font-size: 22px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+        h1 { font-size: 24px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
         
         .container { 
             max-width: 450px; margin: 0 auto 40px auto; padding: 25px; 
@@ -61,61 +61,61 @@
 
     <div class="container">
         <div class="form-group">
-            <label>Nombre del Cliente</label>
-            <input type="text" id="nombre" placeholder="Nombre completo">
+            <label>Customer Name</label>
+            <input type="text" id="nombre" placeholder="Full name">
         </div>
 
         <div class="form-group">
-            <label>Teléfono de Contacto</label>
+            <label>Phone Number</label>
             <input type="tel" id="telCliente" placeholder="Ej: +1 786 000 0000">
         </div>
 
         <div class="row">
             <div class="form-group">
-                <label>Categoría</label>
+                <label>Category</label>
                 <select id="categoria">
-                    <option value="Residencial">Residencial</option>
-                    <option value="Comercial">Comercial</option>
+                    <option value="Residential">Residential</option>
+                    <option value="Commercial">Commercial</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Tipo de Limpieza</label>
+                <label>Service Type</label>
                 <select id="tipo">
-                    <option value="Estándar">Estándar</option>
-                    <option value="Profunda">Profunda</option>
+                    <option value="Standard">Standard</option>
+                    <option value="Deep Cleaning">Deep Cleaning</option>
                     <option value="Move-in">Move-in</option>
                     <option value="Move-out">Move-out</option>
-                    <option value="Post-Construcción">Post-Construcción</option>
+                    <option value="Post-Construction">Post-Construction</option>
                 </select>
             </div>
         </div>
 
         <div class="row">
             <div class="form-group">
-                <label>Fecha</label>
+                <label>Date</label>
                 <input type="date" id="fecha">
             </div>
             <div class="form-group">
-                <label>Hora Deseada</label>
+                <label>Desired Time</label>
                 <input type="time" id="hora">
             </div>
         </div>
 
         <div class="form-group">
-            <label>Dirección</label>
-            <input type="text" id="direccion" placeholder="Dirección del servicio">
+            <label>Service Address</label>
+            <input type="text" id="direccion" placeholder="Street, City, Zip Code">
         </div>
 
         <div class="form-group">
-            <label>Notas Especiales</label>
-            <textarea id="notas" rows="3" placeholder="Instrucciones adicionales..."></textarea>
+            <label>Special Notes</label>
+            <textarea id="notas" rows="3" placeholder="Instructions, pets, keys, etc..."></textarea>
         </div>
 
-        <button class="btn-reserve" onclick="enviarReserva()">Confirmar Limpieza</button>
+        <button class="btn-reserve" onclick="enviarReserva()">Confirm Cleaning</button>
     </div>
 
     <footer>
-        &copy; 2026 Elite Cleaners Company | Gestión de Clientes Pro
+        &copy; 2026 Elite Cleaners Company | Professional Client Portal
     </footer>
 
     <script>
@@ -130,23 +130,23 @@
             const notas = document.getElementById('notas').value;
 
             if(!nombre || !fecha || !direccion || !telCliente) {
-                alert("Por favor completa los campos obligatorios: Nombre, Teléfono, Fecha y Dirección.");
+                alert("Please fill in the required fields: Name, Phone, Date, and Address.");
                 return;
             }
             
-            // CONFIGURA TU NÚMERO AQUÍ (Sin el +)
+            // CONFIGURE YOUR PHONE NUMBER HERE (Digits only, no +)
             const numeroEmpresa = "19253362884"; 
 
-            const mensaje = `*NUEVA SOLICITUD DE LIMPIEZA*%0A` +
+            const mensaje = `*NEW CLEANING REQUEST*%0A` +
                           `----------------------------%0A` +
-                          `*Cliente:* ${nombre}%0A` +
-                          `*Teléfono:* ${telCliente}%0A` +
-                          `*Categoría:* ${categoria}%0A` +
-                          `*Tipo:* ${tipo}%0A` +
-                          `*Fecha:* ${fecha}%0A` +
-                          `*Hora:* ${hora}%0A` +
-                          `*Dirección:* ${direccion}%0A` +
-                          `*Notas:* ${notas || "Sin notas"}%0A` +
+                          `*Customer:* ${nombre}%0A` +
+                          `*Phone:* ${telCliente}%0A` +
+                          `*Category:* ${categoria}%0A` +
+                          `*Type:* ${tipo}%0A` +
+                          `*Date:* ${fecha}%0A` +
+                          `*Time:* ${hora}%0A` +
+                          `*Address:* ${direccion}%0A` +
+                          `*Notes:* ${notas || "No notes"}%0A` +
                           `----------------------------`;
 
             window.open(`https://wa.me/${numeroEmpresa}?text=${mensaje}`, '_blank');
