@@ -18,8 +18,7 @@
             background-color: var(--dark-bg); 
             margin: 0; padding: 0; color: var(--white); 
         }
-        .header { text-align: center; padding: 30px 20px; }
-        .logo { width: 80px; margin-bottom: 10px; }
+        .header { text-align: center; padding: 40px 20px 20px 20px; }
         h1 { font-size: 22px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
         
         .container { 
@@ -57,7 +56,6 @@
 <body>
 
     <div class="header">
-        <img src="assets/icon.png" alt="Logo" class="logo">
         <h1>Elite Cleaners Company</h1>
     </div>
 
@@ -65,6 +63,11 @@
         <div class="form-group">
             <label>Nombre del Cliente</label>
             <input type="text" id="nombre" placeholder="Nombre completo">
+        </div>
+
+        <div class="form-group">
+            <label>Teléfono de Contacto</label>
+            <input type="tel" id="telCliente" placeholder="Ej: +1 786 000 0000">
         </div>
 
         <div class="row">
@@ -105,10 +108,7 @@
 
         <div class="form-group">
             <label>Notas Especiales</label>
-            <textarea id="notas" rows="3" placeholder="¿Algo que debamos saber? (Mascotas, llaves, etc.)"></textarea>
-        </div>
-
-        <div class="form-group" style="display: none;"> <input type="tel" id="telefono" value="Solicitado vía Web">
+            <textarea id="notas" rows="3" placeholder="Instrucciones adicionales..."></textarea>
         </div>
 
         <button class="btn-reserve" onclick="enviarReserva()">Confirmar Limpieza</button>
@@ -121,6 +121,7 @@
     <script>
         function enviarReserva() {
             const nombre = document.getElementById('nombre').value;
+            const telCliente = document.getElementById('telCliente').value;
             const categoria = document.getElementById('categoria').value;
             const tipo = document.getElementById('tipo').value;
             const fecha = document.getElementById('fecha').value;
@@ -128,17 +129,18 @@
             const direccion = document.getElementById('direccion').value;
             const notas = document.getElementById('notas').value;
 
-            if(!nombre || !fecha || !direccion) {
-                alert("Por favor completa los campos principales (Nombre, Fecha y Dirección)");
+            if(!nombre || !fecha || !direccion || !telCliente) {
+                alert("Por favor completa los campos obligatorios: Nombre, Teléfono, Fecha y Dirección.");
                 return;
             }
             
-            // CONFIGURA TU NÚMERO AQUÍ
+            // CONFIGURA TU NÚMERO AQUÍ (Sin el +)
             const numeroEmpresa = "19253362884"; 
 
             const mensaje = `*NUEVA SOLICITUD DE LIMPIEZA*%0A` +
                           `----------------------------%0A` +
                           `*Cliente:* ${nombre}%0A` +
+                          `*Teléfono:* ${telCliente}%0A` +
                           `*Categoría:* ${categoria}%0A` +
                           `*Tipo:* ${tipo}%0A` +
                           `*Fecha:* ${fecha}%0A` +
