@@ -3,108 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Cleaners Company - Booking</title>
+    <title>Elite Cleaners - Reserva Pro</title>
     <style>
         :root {
             --gold: #d4af37;
-            --black: #1a1a1a;
+            --dark-bg: #121926;
+            --card-bg: #1c2536;
+            --text-gray: #9ca3af;
             --white: #ffffff;
+            --blue-btn: #2563eb;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; color: var(--black); }
-        .header { background-color: var(--black); color: var(--gold); padding: 30px 20px; text-align: center; border-bottom: 4px solid var(--gold); }
-        .logo { width: 120px; margin-bottom: 10px; border-radius: 50%; }
-        .container { padding: 30px 20px; max-width: 500px; margin: 20px auto; background: var(--white); border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
-        h3 { color: var(--black); text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--dark-bg); 
+            margin: 0; padding: 0; color: var(--white); 
+        }
+        .header { text-align: center; padding: 30px 20px; }
+        .logo { width: 80px; margin-bottom: 10px; }
+        h1 { font-size: 22px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+        
+        .container { 
+            max-width: 450px; margin: 0 auto 40px auto; padding: 25px; 
+            background: var(--card-bg); border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
         .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 5px rgba(212, 175, 55, 0.3); }
-        .btn-reserve { background-color: var(--gold); color: white; border: none; padding: 18px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; text-transform: uppercase; margin-top: 10px; }
-        .btn-reserve:hover { background-color: #b8962e; transform: translateY(-2px); }
-        footer { text-align: center; padding: 20px; font-size: 12px; color: #888; }
+        label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; font-weight: 600; }
+        
+        input, select, textarea { 
+            width: 100%; padding: 14px; 
+            border: 1px solid #334155; border-radius: 10px; 
+            background-color: #0f172a; color: white;
+            box-sizing: border-box; font-size: 15px;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--blue-btn); outline: none; }
+
+        .row { display: flex; gap: 15px; }
+        .row .form-group { flex: 1; }
+
+        .btn-reserve { 
+            background-color: var(--blue-btn); color: white; border: none; 
+            padding: 18px; width: 100%; font-size: 16px; font-weight: bold; 
+            cursor: pointer; border-radius: 12px; transition: 0.3s; 
+            text-transform: uppercase; margin-top: 10px;
+        }
+        .btn-reserve:hover { background-color: #1d4ed8; transform: translateY(-1px); }
+        
+        footer { text-align: center; padding-bottom: 30px; font-size: 11px; color: var(--text-gray); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <img src="assets/icon.png" alt="Elite Cleaners Logo" class="logo">
-        <h1>ELITE CLEANERS COMPANY</h1>
+        <img src="assets/icon.png" alt="Logo" class="logo">
+        <h1>Elite Cleaners Company</h1>
     </div>
 
     <div class="container">
-        <h3>RESERVA DE SERVICIO</h3>
-        
         <div class="form-group">
-            <label>Nombre Completo</label>
-            <input type="text" id="nombre" placeholder="Tu nombre">
+            <label>Nombre del Cliente</label>
+            <input type="text" id="nombre" placeholder="Nombre completo">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Categoría</label>
+                <select id="categoria">
+                    <option value="Residencial">Residencial</option>
+                    <option value="Comercial">Comercial</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipo de Limpieza</label>
+                <select id="tipo">
+                    <option value="Estándar">Estándar</option>
+                    <option value="Profunda">Profunda</option>
+                    <option value="Move-in">Move-in</option>
+                    <option value="Move-out">Move-out</option>
+                    <option value="Post-Construcción">Post-Construcción</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" id="fecha">
+            </div>
+            <div class="form-group">
+                <label>Hora Deseada</label>
+                <input type="time" id="hora">
+            </div>
         </div>
 
         <div class="form-group">
-            <label>Tipo de Servicio</label>
-            <select id="servicio">
-                <option value="Residencial Standard">Residencial Standard</option>
-                <option value="Oficina / Comercial">Oficina / Comercial</option>
-                <option value="Deep Cleaning (Profunda)">Deep Cleaning (Profunda)</option>
-                <option value="Move-in / Move-out">Move-in / Move-out</option>
-            </select>
+            <label>Dirección</label>
+            <input type="text" id="direccion" placeholder="Dirección del servicio">
         </div>
 
         <div class="form-group">
-            <label>Fecha Deseada</label>
-            <input type="date" id="fecha">
+            <label>Notas Especiales</label>
+            <textarea id="notas" rows="3" placeholder="¿Algo que debamos saber? (Mascotas, llaves, etc.)"></textarea>
         </div>
 
-        <div class="form-group">
-            <label>Dirección del Servicio</label>
-            <textarea id="direccion" rows="2" placeholder="Calle, Ciudad, Zip Code"></textarea>
+        <div class="form-group" style="display: none;"> <input type="tel" id="telefono" value="Solicitado vía Web">
         </div>
 
-        <div class="form-group">
-            <label>Teléfono de Contacto</label>
-            <input type="tel" id="telefono" placeholder="Ej: +1 786 000 0000">
-        </div>
-
-        <button class="btn-reserve" onclick="enviarReserva()">Confirmar por WhatsApp</button>
+        <button class="btn-reserve" onclick="enviarReserva()">Confirmar Limpieza</button>
     </div>
 
     <footer>
-        &copy; 2026 Elite Cleaners Company | High-End Cleaning Services
+        &copy; 2026 Elite Cleaners Company | Gestión de Clientes Pro
     </footer>
 
     <script>
         function enviarReserva() {
-            // 1. Obtener los valores del formulario
             const nombre = document.getElementById('nombre').value;
-            const servicio = document.getElementById('servicio').value;
+            const categoria = document.getElementById('categoria').value;
+            const tipo = document.getElementById('tipo').value;
             const fecha = document.getElementById('fecha').value;
+            const hora = document.getElementById('hora').value;
             const direccion = document.getElementById('direccion').value;
-            const tel = document.getElementById('telefono').value;
+            const notas = document.getElementById('notas').value;
 
-            // 2. Validación simple
-            if(!nombre || !fecha || !tel) {
-                alert("Por favor completa nombre, fecha y teléfono.");
+            if(!nombre || !fecha || !direccion) {
+                alert("Por favor completa los campos principales (Nombre, Fecha y Dirección)");
                 return;
             }
             
-            // 3. CONFIGURA AQUÍ TU NÚMERO (Sin el +)
-            // Ejemplo: "17865551234"
-            const numeroEmpresa = "19253362884"; 
+            // CONFIGURA TU NÚMERO AQUÍ
+            const numeroEmpresa = "TU_NUMERO_AQUI"; 
 
-            // 4. Formatear el mensaje para WhatsApp
-            const texto = `*NUEVA SOLICITUD DE RESERVA*%0A` +
+            const mensaje = `*NUEVA SOLICITUD DE LIMPIEZA*%0A` +
                           `----------------------------%0A` +
                           `*Cliente:* ${nombre}%0A` +
-                          `*Servicio:* ${servicio}%0A` +
+                          `*Categoría:* ${categoria}%0A` +
+                          `*Tipo:* ${tipo}%0A` +
                           `*Fecha:* ${fecha}%0A` +
+                          `*Hora:* ${hora}%0A` +
                           `*Dirección:* ${direccion}%0A` +
-                          `*Teléfono:* ${tel}%0A` +
-                          `----------------------------%0A` +
-                          `_Enviado desde la App de Clientes_`;
+                          `*Notas:* ${notas || "Sin notas"}%0A` +
+                          `----------------------------`;
 
-            // 5. Abrir WhatsApp
-            const url = `https://wa.me/${numeroEmpresa}?text=${texto}`;
-            window.open(url, '_blank');
+            window.open(`https://wa.me/${numeroEmpresa}?text=${mensaje}`, '_blank');
         }
     </script>
 
