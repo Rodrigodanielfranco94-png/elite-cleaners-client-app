@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elite Cleaners - Booking Pro</title>
+
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    
     <style>
         :root {
             --gold: #d4af37;
@@ -140,7 +144,6 @@
     </footer>
 
     <script>
-        // Función para cambiar los campos mostrados
         function toggleFields() {
             const cat = document.getElementById('categoria').value;
             const resFields = document.getElementById('residential-fields');
@@ -165,7 +168,6 @@
             const direccion = document.getElementById('direccion').value;
             const notas = document.getElementById('notas').value;
             
-            // Datos dinámicos
             let detallesExtra = "";
             if (categoria === "Residential") {
                 const rooms = document.getElementById('rooms').value;
@@ -181,8 +183,7 @@
                 return;
             }
             
-            // CONFIGURE YOUR PHONE NUMBER HERE
-            const numeroEmpresa = "19253362884"; 
+            const numeroEmpresa = "TU_NUMERO_AQUI"; 
 
             const mensaje = `*NEW CLEANING REQUEST*%0A` +
                           `----------------------------%0A` +
