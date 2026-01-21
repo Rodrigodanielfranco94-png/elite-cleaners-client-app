@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Cleaners Company - Reservas</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .header { background-color: #1a1a1a; color: #d4af37; padding: 20px; text-align: center; }
+        .container { padding: 20px; max-width: 600px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 20px; }
+        h1 { margin: 0; font-size: 24px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-reserve { background-color: #d4af37; color: black; border: none; padding: 15px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        .btn-reserve:hover { background-color: #b8962e; }
+        .logo { width: 100px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="assets/icon.png" alt="Logo Elite Cleaners" class="logo">
+        <h1>Elite Cleaners Company</h1>
+    </div>
+    <div class="container">
+        <h3>Reserva tu Servicio Premium</h3>
+        <div class="form-group">
+            <label>Tipo de Limpieza</label>
+            <select id="servicio">
+                <option>Residencial</option>
+                <option>Oficina / Comercial</option>
+                <option>Profunda (Move-in/out)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Fecha del Servicio</label>
+            <input type="date" id="fecha">
+        </div>
+        <div class="form-group">
+            <label>Tu Teléfono</label>
+            <input type="tel" id="telefono" placeholder="Ej: +1 123 456 7890">
+        </div>
+        <button class="btn-reserve" onclick="enviarReserva()">Confirmar Reserva</button>
+    </div>
+
+    <script>
+        function enviarReserva() {
+            const servicio = document.getElementById('servicio').value;
+            const fecha = document.getElementById('fecha').value;
+            const tel = document.getElementById('telefono').value;
+            
+            // Aquí puedes conectar con tu sistema de Admin o enviar por WhatsApp
+            const mensaje = `Hola Elite Cleaners, quiero reservar un servicio ${servicio} para la fecha ${fecha}. Mi contacto: ${tel}`;
+            window.open(`https://wa.me/TU_NUMERO?text=${encodeURIComponent(mensaje)}`);
+        }
+    </script>
+</body>
+</html>
