@@ -51,6 +51,9 @@
         .btn-reserve:hover { background-color: #1d4ed8; transform: translateY(-1px); }
         
         footer { text-align: center; padding-bottom: 30px; font-size: 11px; color: var(--text-gray); }
+        
+        /* Estilo para secciones dinámicas */
+        #dynamic-fields { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -67,13 +70,13 @@
 
         <div class="form-group">
             <label>Phone Number</label>
-            <input type="tel" id="telCliente" placeholder="Ej: +1 786 000 0000">
+            <input type="tel" id="telCliente" placeholder="Ex: +1 786 000 0000">
         </div>
 
         <div class="row">
             <div class="form-group">
                 <label>Category</label>
-                <select id="categoria">
+                <select id="categoria" onchange="toggleFields()">
                     <option value="Residential">Residential</option>
                     <option value="Commercial">Commercial</option>
                 </select>
@@ -81,12 +84,30 @@
             <div class="form-group">
                 <label>Service Type</label>
                 <select id="tipo">
+                    <option value="First Cleaning">First Cleaning</option>
                     <option value="Standard">Standard</option>
                     <option value="Deep Cleaning">Deep Cleaning</option>
                     <option value="Move-in">Move-in</option>
                     <option value="Move-out">Move-out</option>
                     <option value="Post-Construction">Post-Construction</option>
                 </select>
+            </div>
+        </div>
+
+        <div id="dynamic-fields">
+            <div id="residential-fields" class="row">
+                <div class="form-group">
+                    <label>Bedrooms</label>
+                    <input type="number" id="rooms" placeholder="Qty">
+                </div>
+                <div class="form-group">
+                    <label>Bathrooms</label>
+                    <input type="number" id="baths" placeholder="Qty">
+                </div>
+            </div>
+            <div id="commercial-fields" class="form-group" style="display: none;">
+                <label>Square Footage (Sq Ft)</label>
+                <input type="text" id="sqft" placeholder="Ex: 2500 sq ft">
             </div>
         </div>
 
@@ -119,6 +140,21 @@
     </footer>
 
     <script>
+        // Función para cambiar los campos mostrados
+        function toggleFields() {
+            const cat = document.getElementById('categoria').value;
+            const resFields = document.getElementById('residential-fields');
+            const comFields = document.getElementById('commercial-fields');
+
+            if (cat === "Residential") {
+                resFields.style.display = "flex";
+                comFields.style.display = "none";
+            } else {
+                resFields.style.display = "none";
+                comFields.style.display = "block";
+            }
+        }
+
         function enviarReserva() {
             const nombre = document.getElementById('nombre').value;
             const telCliente = document.getElementById('telCliente').value;
@@ -128,20 +164,32 @@
             const hora = document.getElementById('hora').value;
             const direccion = document.getElementById('direccion').value;
             const notas = document.getElementById('notas').value;
+            
+            // Datos dinámicos
+            let detallesExtra = "";
+            if (categoria === "Residential") {
+                const rooms = document.getElementById('rooms').value;
+                const baths = document.getElementById('baths').value;
+                detallesExtra = `*Rooms:* ${rooms}%0A*Baths:* ${baths}`;
+            } else {
+                const sqft = document.getElementById('sqft').value;
+                detallesExtra = `*Square Footage:* ${sqft}`;
+            }
 
             if(!nombre || !fecha || !direccion || !telCliente) {
                 alert("Please fill in the required fields: Name, Phone, Date, and Address.");
                 return;
             }
             
-            // CONFIGURE YOUR PHONE NUMBER HERE (Digits only, no +)
-            const numeroEmpresa = "19253362884"; 
+            // CONFIGURE YOUR PHONE NUMBER HERE
+            const numeroEmpresa = "TU_NUMERO_AQUI"; 
 
             const mensaje = `*NEW CLEANING REQUEST*%0A` +
                           `----------------------------%0A` +
                           `*Customer:* ${nombre}%0A` +
                           `*Phone:* ${telCliente}%0A` +
                           `*Category:* ${categoria}%0A` +
+                          `${detallesExtra}%0A` +
                           `*Type:* ${tipo}%0A` +
                           `*Date:* ${fecha}%0A` +
                           `*Time:* ${hora}%0A` +
