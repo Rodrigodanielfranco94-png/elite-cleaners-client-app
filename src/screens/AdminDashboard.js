@@ -1,66 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { db } from '../services/firebaseConfig';
-import { collection, query, onSnapshot, sum } from 'firebase/firestore';
+import { collection, query, onSnapshot } from 'firebase/firestore';
 
-export default function AdminDashboard({ navigation }) {
-  const [transacciones, setTransacciones] = useState([]);
-  const [totalTaxes, setTotalTaxes] = useState(0);
+export default function AdminDashboard() {
+  const [total, setTotal] = useState(0);
+  const [ventas, setVentas] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "solicitudes"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let total = 0;
-      const list = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        list.push({ id: doc.id, ...data });
-        total += data.monto || 0;
+    const q = query(collection(db, "transacciones"));
+    const unsub = onSnapshot(q, (snapshot) => {
+      let suma = 0;
+      const docs = [];
+      snapshot.forEach(doc => {
+        suma += doc.data().monto;
+        docs.push({id: doc.id, ...doc.data()});
       });
-      setTransacciones(list);
-      setTotalTaxes(total);
+      setTotal(suma);
+      setVentas(docs);
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Panel de Control - Élite Cleaners</Text>
-      
-      <View style={styles.cardResumen}>
-        <Text style={styles.resumenLabel}>Total Acumulado (Taxes 2026)</Text>
-        <Text style={styles.resumenMonto}>${totalTaxes.toFixed(2)}</Text>
+      <Text style={styles.titulo}>Reporte de Impuestos 2026</Text>
+      <View style={styles.cardTotal}>
+        <Text style={{color: '#fff'}}>Ingreso Total Bruto</Text>
+        <Text style={styles.montoTotal}>${total.toFixed(2)}</Text>
       </View>
-
-      <Text style={styles.subHeader}>Historial de Pagos</Text>
-      <FlatList
-        data={transacciones}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemFecha}>{item.fecha_servicio}</Text>
-            <Text style={styles.itemMonto}>+ ${item.monto}</Text>
-          </View>
+      <Text style={styles.sub}>Historial de Ingresos:</Text>
+      <FlatList 
+        data={ventas}
+        renderItem={({item}) => (
+          <View style={styles.item}><Text>{item.fecha_cita}</Text><Text style={{fontWeight:'bold'}}>${item.monto}</Text></View>
         )}
       />
-
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F2F5', padding: 25, paddingTop: 60 },
-  header: { fontSize: 22, fontWeight: 'bold', color: '#1A2A44', marginBottom: 20 },
-  cardResumen: { backgroundColor: '#1A2A44', padding: 30, borderRadius: 20, alignItems: 'center', marginBottom: 30 },
-  resumenLabel: { color: '#fff', opacity: 0.8, fontSize: 14 },
-  resumenMonto: { color: '#fff', fontSize: 40, fontWeight: 'bold', marginTop: 10 },
-  subHeader: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
-  item: { backgroundColor: '#fff', padding: 15, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  itemFecha: { color: '#333', fontWeight: '500' },
-  itemMonto: { color: '#10B981', fontWeight: 'bold' },
-  backButton: { marginTop: 20, alignItems: 'center' },
-  backButtonText: { color: '#666', fontWeight: 'bold' }
+  container: { flex: 1, padding: 25, paddingTop: 60, backgroundColor: '#fff' },
+  titulo: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
+  cardTotal: { backgroundColor: '#1A2A44', padding: 30, borderRadius: 15, alignItems: 'center' },
+  montoTotal: { color: '#fff', fontSize: 35, fontWeight: 'bold' },
+  sub: { marginTop: 25, fontWeight: 'bold', fontSize: 16 },
+  item: { flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderBottomWidth: 1, borderColor: '#eee' }
 });
