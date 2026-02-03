@@ -1,206 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Cleaners - Booking Pro</title>
-
-    <link rel="icon" type="image/png" href="assets/icon.png">
-    <link rel="apple-touch-icon" href="assets/icon.png">
+    <title>Elite Cleaners - Booking Cloud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <style>
-        :root {
-            --gold: #d4af37;
-            --dark-bg: #121926;
-            --card-bg: #1c2536;
-            --text-gray: #9ca3af;
-            --white: #ffffff;
-            --blue-btn: #2563eb;
-        }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--dark-bg); 
-            margin: 0; padding: 0; color: var(--white); 
-        }
-        .header { text-align: center; padding: 40px 20px 20px 20px; }
-        h1 { font-size: 24px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
-        
-        .container { 
-            max-width: 450px; margin: 0 auto 40px auto; padding: 25px; 
-            background: var(--card-bg); border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-gray); text-transform: uppercase; font-weight: 600; }
-        
-        input, select, textarea { 
-            width: 100%; padding: 14px; 
-            border: 1px solid #334155; border-radius: 10px; 
-            background-color: #0f172a; color: white;
-            box-sizing: border-box; font-size: 15px;
-        }
-        input:focus, select:focus, textarea:focus { border-color: var(--blue-btn); outline: none; }
+        // CONFIGURACIÓN DE TU FIREBASE (Copia esto de tu Firebase Console)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto-id",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "tu-id",
+            appId: "tu-app-id"
+        };
 
-        .row { display: flex; gap: 15px; }
-        .row .form-group { flex: 1; }
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        .btn-reserve { 
-            background-color: var(--blue-btn); color: white; border: none; 
-            padding: 18px; width: 100%; font-size: 16px; font-weight: bold; 
-            cursor: pointer; border-radius: 12px; transition: 0.3s; 
-            text-transform: uppercase; margin-top: 10px;
-        }
-        .btn-reserve:hover { background-color: #1d4ed8; transform: translateY(-1px); }
-        
-        footer { text-align: center; padding-bottom: 30px; font-size: 11px; color: var(--text-gray); }
-        
-        /* Estilo para secciones dinámicas */
-        #dynamic-fields { margin-top: 10px; }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <h1>Elite Cleaners Company</h1>
-    </div>
-
-    <div class="container">
-        <div class="form-group">
-            <label>Customer Name</label>
-            <input type="text" id="nombre" placeholder="Full name">
-        </div>
-
-        <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" id="telCliente" placeholder="Ex: +1 786 000 0000">
-        </div>
-
-        <div class="row">
-            <div class="form-group">
-                <label>Category</label>
-                <select id="categoria" onchange="toggleFields()">
-                    <option value="Residential">Residential</option>
-                    <option value="Commercial">Commercial</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Service Type</label>
-                <select id="tipo">
-                    <option value="First Cleaning">First Cleaning</option>
-                    <option value="Standard (regular clients)">Standard (regular clients)</option>
-                    <option value="Deep Cleaning">Deep Cleaning</option>
-                    <option value="Move-in">Move-in</option>
-                    <option value="Move-out">Move-out</option>
-                    <option value="Post-Construction">Post-Construction</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="dynamic-fields">
-            <div id="residential-fields" class="row">
-                <div class="form-group">
-                    <label>Bedrooms</label>
-                    <input type="number" id="rooms" placeholder="Qty">
-                </div>
-                <div class="form-group">
-                    <label>Bathrooms</label>
-                    <input type="number" id="baths" placeholder="Qty">
-                </div>
-            </div>
-            <div id="commercial-fields" class="form-group" style="display: none;">
-                <label>Square Footage (Sq Ft)</label>
-                <input type="text" id="sqft" placeholder="Ex: 2500 sq ft">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="fecha">
-            </div>
-            <div class="form-group">
-                <label>Desired Time</label>
-                <input type="time" id="hora">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Service Address</label>
-            <input type="text" id="direccion" placeholder="Street, City, Zip Code">
-        </div>
-
-        <div class="form-group">
-            <label>Special Notes</label>
-            <textarea id="notas" rows="3" placeholder="Instructions, pets, keys, etc..."></textarea>
-        </div>
-
-        <button class="btn-reserve" onclick="enviarReserva()">Submit request</button>
-    </div>
-
-    <footer>
-        &copy; 2026 Elite Cleaners Company | Professional Client Portal
-    </footer>
-
-    <script>
-        function toggleFields() {
-            const cat = document.getElementById('categoria').value;
-            const resFields = document.getElementById('residential-fields');
-            const comFields = document.getElementById('commercial-fields');
-
-            if (cat === "Residential") {
-                resFields.style.display = "flex";
-                comFields.style.display = "none";
-            } else {
-                resFields.style.display = "none";
-                comFields.style.display = "block";
+        // Hacer la función accesible globalmente
+        window.enviarCitaAFirebase = async (datos) => {
+            try {
+                await addDoc(collection(db, "transacciones"), {
+                    ...datos,
+                    creado: serverTimestamp(),
+                    monto: 50.00, // Monto base para tus taxes
+                    estado: "Pendiente"
+                });
+                return true;
+            } catch (error) {
+                console.error("Error en Firebase:", error);
+                return false;
             }
-        }
-
-        function enviarReserva() {
-            const nombre = document.getElementById('nombre').value;
-            const telCliente = document.getElementById('telCliente').value;
-            const categoria = document.getElementById('categoria').value;
-            const tipo = document.getElementById('tipo').value;
-            const fecha = document.getElementById('fecha').value;
-            const hora = document.getElementById('hora').value;
-            const direccion = document.getElementById('direccion').value;
-            const notas = document.getElementById('notas').value;
-            
-            let detallesExtra = "";
-            if (categoria === "Residential") {
-                const rooms = document.getElementById('rooms').value;
-                const baths = document.getElementById('baths').value;
-                detallesExtra = `*Rooms:* ${rooms}%0A*Baths:* ${baths}`;
-            } else {
-                const sqft = document.getElementById('sqft').value;
-                detallesExtra = `*Square Footage:* ${sqft}`;
-            }
-
-            if(!nombre || !fecha || !direccion || !telCliente) {
-                alert("Please fill in the required fields: Name, Phone, Date, and Address.");
-                return;
-            }
-            
-            const numeroEmpresa = "19253362884"; 
-
-            const mensaje = `*NEW CLEANING REQUEST*%0A` +
-                          `----------------------------%0A` +
-                          `*Customer:* ${nombre}%0A` +
-                          `*Phone:* ${telCliente}%0A` +
-                          `*Category:* ${categoria}%0A` +
-                          `${detallesExtra}%0A` +
-                          `*Type:* ${tipo}%0A` +
-                          `*Date:* ${fecha}%0A` +
-                          `*Time:* ${hora}%0A` +
-                          `*Address:* ${direccion}%0A` +
-                          `*Notes:* ${notas || "No notes"}%0A` +
-                          `----------------------------`;
-
-            window.open(`https://wa.me/${numeroEmpresa}?text=${mensaje}`, '_blank');
-        }
+        };
     </script>
 
+    <style>
+        .card-active { border: 2px solid #2563eb; background-color: #eff6ff; }
+        .day-active { background-color: #10b981 !important; color: white; border-radius: 50%; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans pb-10">
+
+    <div class="p-6 flex justify-between items-center bg-white shadow-sm">
+        <i class="fa-solid fa-bars text-xl text-slate-600"></i>
+        <h1 class="text-lg font-bold text-slate-800">Elite Cleaners</h1>
+        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-user text-blue-600"></i>
+        </div>
+    </div>
+
+    <div class="max-w-md mx-auto p-4">
+        
+        <div class="bg-blue-600 rounded-2xl p-6 text-white flex justify-between items-center mb-6 shadow-lg shadow-blue-200">
+            <div>
+                <h2 class="text-2xl font-bold">40% off</h2>
+                <p class="text-blue-100 text-sm">On first cleaning service</p>
+            </div>
+            <i class="fa-solid fa-wand-magic-sparkles text-4xl opacity-50"></i>
+        </div>
+
+        <h3 class="font-bold text-slate-700 mb-4">Selecciona el servicio</h3>
+        <div class="grid grid-cols-3 gap-3 mb-8">
+            <div onclick="selectPack(this, '4 Bedrooms')" class="bg-white p-4 rounded-xl shadow-sm text-center cursor-pointer border-2 border-transparent">
+                <i class="fa-solid fa-house-user text-blue-500 text-xl mb-2"></i>
+                <p class="text-[10px] font-bold">4 Rooms</p>
+            </div>
+            <div onclick="selectPack(this, '3 Bedrooms')" class="bg-white p-4 rounded-xl shadow-sm text-center cursor-pointer border-2 border-transparent card-active">
+                <i class="fa-solid fa-house text-blue-500 text-xl mb-2"></i>
+                <p class="text-[10px] font-bold">3 Rooms</p>
+            </div>
+            <div onclick="selectPack(this, '2 Bedrooms')" class="bg-white p-4 rounded-xl shadow-sm text-center cursor-pointer border-2 border-transparent">
+                <i class="fa-solid fa-bed text-blue-500 text-xl mb-2"></i>
+                <p class="text-[10px] font-bold">2 Rooms</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <label class="text-[10px] text-slate-400 font-bold uppercase">Customer Info</label>
+                <input type="text" id="nombre" placeholder="Nombre completo" class="w-full mt-2 outline-none text-slate-700">
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm">
+                <label class="text-[10px] text-slate-400 font-bold uppercase">Address</label>
+                <input type="text" id="direccion" placeholder="Calle, Ciudad, ZIP" class="w-full mt-2 outline-none text-slate-700">
+            </div>
+        </div>
+
+        <button id="btnProceed" onclick="procesarTodo()" class="w-full bg-blue-600 text-white font-bold p-5 rounded-2xl mt-8 shadow-lg shadow-blue-200 active:scale-95 transition-all">
+            PROCEED
+        </button>
+    </div>
+
+    <script>
+        let paquete = "3 Bedrooms";
+
+        function selectPack(el, name) {
+            document.querySelectorAll('.grid div').forEach(d => d.classList.remove('card-active'));
+            el.classList.add('card-active');
+            paquete = name;
+        }
+
+        async function procesarTodo() {
+            const nombre = document.getElementById('nombre').value;
+            const dir = document.getElementById('direccion').value;
+            const btn = document.getElementById('btnProceed');
+
+            if(!nombre || !dir) {
+                alert("Completa los datos, por favor.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "SAVING...";
+
+            // 1. Guardar en Firebase (Para tus Taxes)
+            const exito = await window.enviarCitaAFirebase({
+                cliente: nombre,
+                direccion: dir,
+                paquete: paquete,
+                fecha_reserva: "Oct 3, 2026"
+            });
+
+            // 2. Abrir WhatsApp
+            if(exito) {
+                const msg = `*NEW REQUEST*%0A*Name:* ${nombre}%0A*Pack:* ${paquete}%0A*Address:* ${dir}`;
+                window.open(`https://wa.me/19253362884?text=${msg}`, '_blank');
+                btn.innerText = "PROCEED";
+                btn.disabled = false;
+            } else {
+                alert("Error al guardar en la nube. Verifica tu Firebase Config.");
+                btn.innerText = "PROCEED";
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
