@@ -1,85 +1,88 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Alert } from 'react-native';
 import { db } from '../services/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function RequestQuoteScreen({ navigation }) {
-  const [address, setAddress] = useState('');
-  const [serviceType, setServiceType] = useState('Residencial');
-  const [details, setDetails] = useState('');
+  const [step, setStep] = useState(1); // 1: Calendario, 2: Pago
+  const [selectedDate, setSelectedDate] = useState(3);
+  const [selectedTime, setSelectedTime] = useState("11:00 AM");
 
-  const sendRequest = async () => {
-    if (!address || !details) {
-      Alert.alert("Campos incompletos", "Por favor llena la dirección y detalles.");
-      return;
-    }
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
+  const handleFinalConfirm = async () => {
     try {
+      // Registro automático para tus TAXES en Firebase
       await addDoc(collection(db, "solicitudes"), {
-        address,
-        serviceType,
-        details,
-        status: "Pendiente",
-        date: new Date().toISOString()
+        fecha_servicio: `Octubre ${selectedDate}, 2022`,
+        hora: selectedTime,
+        monto: 50,
+        status: "Pagado",
+        createdAt: serverTimestamp()
       });
-      Alert.alert("¡Enviado!", "Dayana revisará tu solicitud pronto.");
+      
+      Alert.alert("¡Éxito!", "Orden realizada. Se guardó el registro para taxes.");
       navigation.navigate('Welcome');
     } catch (e) {
-      Alert.alert("Error", "No se pudo enviar la solicitud.");
+      Alert.alert("Error", "No se pudo procesar el pago.");
     }
   };
 
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Nueva Solicitud</Text>
-      
-      <Text style={styles.label}>Dirección del Servicio</Text>
-      <TextInput 
-        style={styles.input} 
-        placeholder="Ej: 123 Luxury Ave, Miami" 
-        onChangeText={setAddress}
-      />
+  if (step === 1) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.headerTitle}>Cleaning Service</Text>
+        <Text style={styles.dateSubtitle}>October, 2022</Text>
+        
+        <FlatList
+          data={days}
+          numColumns={7}
+          renderItem={({ item }) => (
+            <TouchableOpacity 
+              style={[styles.dayCircle, selectedDate === item && styles.selectedDay]}
+              onPress={() => setSelectedDate(item)}
+            >
+              <Text style={{color: selectedDate === item ? '#fff' : '#333'}}>{item}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.toString()}
+        />
 
-      <Text style={styles.label}>Tipo de Limpieza</Text>
-      <View style={styles.pickerContainer}>
-        {['Residencial', 'Comercial', 'Post-Construcción'].map((type) => (
-          <TouchableOpacity 
-            key={type} 
-            style={[styles.chip, serviceType === type && styles.chipActive]}
-            onPress={() => setServiceType(type)}
-          >
-            <Text style={serviceType === type ? styles.chipTextActive : styles.chipText}>{type}</Text>
-          </TouchableOpacity>
-        ))}
+        <TouchableOpacity style={styles.mainButton} onPress={() => setStep(2)}>
+          <Text style={styles.mainButtonText}>PROCEED TO PAYMENT</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.headerTitle}>My Cards</Text>
+      <View style={styles.creditCard}>
+        <Text style={{color: '#fff'}}>My Debit Card</Text>
+        <Text style={styles.cardNumber}>4321  1234  2121  0101</Text>
+        <View>
+          <Text style={{color: '#fff', opacity: 0.7}}>Balance</Text>
+          <Text style={styles.balanceAmount}>$50,400.00</Text>
+        </View>
       </View>
 
-      <Text style={styles.label}>Detalles Adicionales</Text>
-      <TextInput 
-        style={[styles.input, styles.textArea]} 
-        placeholder="Ej: 3 habitaciones, limpieza profunda de cocina..." 
-        multiline
-        numberOfLines={4}
-        onChangeText={setDetails}
-      />
-
-      <TouchableOpacity style={styles.mainButton} onPress={sendRequest}>
-        <Text style={styles.mainButtonText}>ENVIAR SOLICITUD PREMIUM</Text>
+      <TouchableOpacity style={[styles.mainButton, {backgroundColor: '#10B981'}]} onPress={handleFinalConfirm}>
+        <Text style={styles.mainButtonText}>CONFIRM ($50.00)</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F9FA', padding: 20 },
-  header: { fontSize: 24, fontWeight: 'bold', color: '#002D62', marginBottom: 20, marginTop: 20 },
-  label: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 10 },
-  input: { backgroundColor: '#fff', padding: 15, borderRadius: 10, marginBottom: 20, borderWidth: 1, borderColor: '#DDD' },
-  textArea: { height: 100, textAlignVertical: 'top' },
-  pickerContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 25 },
-  chip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, backgroundColor: '#E9ECEF' },
-  chipActive: { backgroundColor: '#002D62' },
-  chipText: { color: '#666' },
-  chipTextActive: { color: '#fff', fontWeight: 'bold' },
-  mainButton: { backgroundColor: '#002D62', padding: 18, borderRadius: 12, alignItems: 'center', marginTop: 10 },
-  mainButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
+  container: { flex: 1, backgroundColor: '#F8F9FB', padding: 20, paddingTop: 60 },
+  headerTitle: { fontSize: 24, fontWeight: 'bold', color: '#333' },
+  dateSubtitle: { color: '#666', marginBottom: 20 },
+  dayCircle: { width: 45, height: 45, justifyContent: 'center', alignItems: 'center', margin: 2 },
+  selectedDay: { backgroundColor: '#10B981', borderRadius: 25 },
+  mainButton: { backgroundColor: '#4A80F5', padding: 18, borderRadius: 30, alignItems: 'center', marginTop: 40 },
+  mainButtonText: { color: '#fff', fontWeight: 'bold' },
+  creditCard: { backgroundColor: '#1E6AF3', padding: 25, borderRadius: 20, height: 200, justifyContent: 'space-between', marginTop: 20 },
+  cardNumber: { color: '#fff', fontSize: 20, letterSpacing: 2 },
+  balanceAmount: { color: '#fff', fontSize: 26, fontWeight: 'bold' }
 });
