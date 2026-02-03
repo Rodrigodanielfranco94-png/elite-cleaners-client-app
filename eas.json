@@ -1,9 +1,0 @@
-{
-  "expo": {
-    "platforms": ["ios", "android", "web"],
-    "web": {
-      "favicon": "./assets/icon.png",
-      "bundler": "metro"
-    }
-  }
-}
