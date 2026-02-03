@@ -1,23 +1,52 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
+  
+  const accesoAdmin = () => {
+    Alert.prompt(
+      "Acceso Restringido",
+      "Ingresa la contraseña de administrador:",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Entrar",
+          onPress: (password) => {
+            if (password === '1234') { // <--- AQUÍ pones tu clave secreta
+              navigation.navigate('Admin');
+            } else {
+              Alert.alert("Error", "Contraseña incorrecta");
+            }
+          }
+        }
+      ],
+      "secure-text"
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Élite Cleaners Company</Text>
-      <Text style={styles.subtitle}>Calidad que transforma tu hogar.</Text>
+      {/* Tu código actual del Welcome (Banner, servicios, etc.) */}
       
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Comenzar Solicitud</Text>
+      <Text style={styles.titulo}>Bienvenido a Élite Cleaners</Text>
+
+      <TouchableOpacity style={styles.botonCliente} onPress={() => navigation.navigate('RequestQuote')}>
+        <Text style={styles.textoBoton}>RESERVAR LIMPIEZA</Text>
+      </TouchableOpacity>
+
+      {/* Botón "Secreto" para ti */}
+      <TouchableOpacity style={styles.botonAdmin} onPress={accesoAdmin}>
+        <Text style={styles.textoAdmin}>Ver Taxes (Admin)</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#002D62' },
-  title: { fontSize: 28, color: '#D4AF37', fontWeight: 'bold' },
-  subtitle: { fontSize: 16, color: '#fff', marginBottom: 40 },
-  button: { backgroundColor: '#D4AF37', padding: 15, borderRadius: 10 },
-  buttonText: { color: '#002D62', fontWeight: 'bold', fontSize: 18 }
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F9FB' },
+  titulo: { fontSize: 24, fontWeight: 'bold', marginBottom: 40 },
+  botonCliente: { backgroundColor: '#4A80F5', padding: 20, borderRadius: 30, width: '80%', alignItems: 'center' },
+  textoBoton: { color: '#fff', fontWeight: 'bold' },
+  botonAdmin: { marginTop: 50, opacity: 0.5 },
+  textoAdmin: { color: '#666', fontSize: 12, textDecorationLine: 'underline' }
 });
